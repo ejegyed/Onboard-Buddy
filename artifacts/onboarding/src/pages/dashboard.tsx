@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useGetDashboardSummary, useGetPendingCheckins, useListCohorts, useGetCohortDashboard } from "@workspace/api-client-react"
+import { useState, useMemo } from "react"
+import { useGetDashboardSummary, useGetPendingCheckins, useListCohorts, useGetCohortDashboard, useListAssociates } from "@workspace/api-client-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -19,6 +19,15 @@ export default function Dashboard() {
   const { data: cohortDashboard, isLoading: isCohortDashboardLoading } = useGetCohortDashboard(activeCohortId || 0, {
     query: { enabled: !!activeCohortId }
   })
+  const { data: cohortAssociates } = useListAssociates(
+    { cohortId: activeCohortId ?? undefined },
+    { query: { enabled: !!activeCohortId } }
+  )
+  const associateNameMap = useMemo(() => {
+    const m: Record<number, string> = {}
+    cohortAssociates?.forEach((a) => (m[a.id] = a.name))
+    return m
+  }, [cohortAssociates])
 
   if (isSummaryLoading || isPendingLoading || isCohortsLoading) {
     return <div className="space-y-6">
@@ -158,7 +167,7 @@ export default function Dashboard() {
                       <div key={assoc.associateId} className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
                           <Link href={`/associates/${assoc.associateId}`} className="text-sm font-medium hover:underline text-primary">
-                            Associate #{assoc.associateId}
+                            {associateNameMap[assoc.associateId] ?? `Associate #${assoc.associateId}`}
                           </Link>
                           <span className="text-xs text-muted-foreground">{assoc.overallPercent?.toFixed(0)}%</span>
                         </div>
