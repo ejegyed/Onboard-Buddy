@@ -1,0 +1,1 @@
+- [Orval + Zod v3 integer types](orval-zod-integer.md) — use `type: number` in OpenAPI spec; `type: integer` causes Orval to emit `zod.int()` which only exists in Zod v4

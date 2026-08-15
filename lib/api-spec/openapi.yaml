@@ -3,13 +3,24 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Associate Onboarding Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: cohorts
+    description: Cohort management
+  - name: supervisors
+    description: Supervisor management
+  - name: associates
+    description: Associate management
+  - name: checkins
+    description: Check-in management
+  - name: dashboard
+    description: Dashboard and reporting
+
 paths:
   /healthz:
     get:
@@ -24,6 +35,512 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Cohorts ──────────────────────────────────────────────────────────────
+  /cohorts:
+    get:
+      operationId: listCohorts
+      tags: [cohorts]
+      summary: List all cohorts
+      responses:
+        "200":
+          description: List of cohorts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cohort"
+    post:
+      operationId: createCohort
+      tags: [cohorts]
+      summary: Create a new cohort
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CohortInput"
+      responses:
+        "201":
+          description: Cohort created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cohort"
+        "400":
+          description: Invalid input
+
+  /cohorts/{id}:
+    get:
+      operationId: getCohort
+      tags: [cohorts]
+      summary: Get a cohort by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Cohort
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cohort"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateCohort
+      tags: [cohorts]
+      summary: Update a cohort
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CohortUpdate"
+      responses:
+        "200":
+          description: Updated cohort
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cohort"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteCohort
+      tags: [cohorts]
+      summary: Delete a cohort
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  # ─── Supervisors ──────────────────────────────────────────────────────────
+  /supervisors:
+    get:
+      operationId: listSupervisors
+      tags: [supervisors]
+      summary: List all supervisors
+      responses:
+        "200":
+          description: List of supervisors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Supervisor"
+    post:
+      operationId: createSupervisor
+      tags: [supervisors]
+      summary: Create a new supervisor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupervisorInput"
+      responses:
+        "201":
+          description: Supervisor created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supervisor"
+        "400":
+          description: Invalid input
+
+  /supervisors/{id}:
+    get:
+      operationId: getSupervisor
+      tags: [supervisors]
+      summary: Get a supervisor by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Supervisor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supervisor"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateSupervisor
+      tags: [supervisors]
+      summary: Update a supervisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupervisorUpdate"
+      responses:
+        "200":
+          description: Updated supervisor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supervisor"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteSupervisor
+      tags: [supervisors]
+      summary: Delete a supervisor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  # ─── Associates ───────────────────────────────────────────────────────────
+  /associates:
+    get:
+      operationId: listAssociates
+      tags: [associates]
+      summary: List associates, optionally filtered by cohort
+      parameters:
+        - name: cohortId
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: List of associates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Associate"
+    post:
+      operationId: createAssociate
+      tags: [associates]
+      summary: Create a new associate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssociateInput"
+      responses:
+        "201":
+          description: Associate created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associate"
+        "400":
+          description: Invalid input
+
+  /associates/{id}:
+    get:
+      operationId: getAssociate
+      tags: [associates]
+      summary: Get an associate by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Associate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associate"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateAssociate
+      tags: [associates]
+      summary: Update an associate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssociateUpdate"
+      responses:
+        "200":
+          description: Updated associate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Associate"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteAssociate
+      tags: [associates]
+      summary: Delete an associate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /associates/{id}/progress:
+    get:
+      operationId: getAssociateProgress
+      tags: [associates]
+      summary: Get check-in progress for an associate across all phases
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Associate progress across phases
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssociateProgress"
+        "404":
+          description: Not found
+
+  # ─── Check-ins ────────────────────────────────────────────────────────────
+  /checkins:
+    get:
+      operationId: listCheckins
+      tags: [checkins]
+      summary: List check-ins, filterable by associate, supervisor, or phase
+      parameters:
+        - name: associateId
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: supervisorId
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: phase
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pre_start, first_day, week_1, week_2, week_3, week_4]
+      responses:
+        "200":
+          description: List of check-ins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Checkin"
+    post:
+      operationId: createCheckin
+      tags: [checkins]
+      summary: Create a check-in record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckinInput"
+      responses:
+        "201":
+          description: Check-in created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+        "400":
+          description: Invalid input
+
+  /checkins/{id}:
+    get:
+      operationId: getCheckin
+      tags: [checkins]
+      summary: Get a check-in by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Check-in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateCheckin
+      tags: [checkins]
+      summary: Update a check-in (e.g. complete it, add notes)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckinUpdate"
+      responses:
+        "200":
+          description: Updated check-in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteCheckin
+      tags: [checkins]
+      summary: Delete a check-in
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+
+  /checkins/{id}/complete:
+    post:
+      operationId: completeCheckin
+      tags: [checkins]
+      summary: Mark a check-in as completed
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckinCompletion"
+      responses:
+        "200":
+          description: Completed check-in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+        "404":
+          description: Not found
+
+  # ─── Dashboard ────────────────────────────────────────────────────────────
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get overall onboarding summary stats
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/cohort/{cohortId}:
+    get:
+      operationId: getCohortDashboard
+      tags: [dashboard]
+      summary: Get per-cohort progress breakdown
+      parameters:
+        - name: cohortId
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Cohort dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CohortDashboard"
+        "404":
+          description: Not found
+
+  /dashboard/pending-checkins:
+    get:
+      operationId: getPendingCheckins
+      tags: [dashboard]
+      summary: List all pending (incomplete) check-ins across all associates
+      responses:
+        "200":
+          description: Pending check-ins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PendingCheckin"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +551,350 @@ components:
       required:
         - status
 
+    # ─── Cohort ─────────────────────────────────────────────────────────────
+    Cohort:
+      type: object
+      required: [id, name, startDate, createdAt]
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        startDate:
+          type: string
+          description: Calendar date YYYY-MM-DD
+        description:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    CohortInput:
+      type: object
+      required: [name, startDate]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        startDate:
+          type: string
+          description: Calendar date YYYY-MM-DD
+        description:
+          type: string
+
+    CohortUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        startDate:
+          type: string
+        description:
+          type: string
+
+    # ─── Supervisor ──────────────────────────────────────────────────────────
+    Supervisor:
+      type: object
+      required: [id, name, email, role, createdAt]
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        title:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    SupervisorInput:
+      type: object
+      required: [name, email, role]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        role:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        title:
+          type: string
+
+    SupervisorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        role:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        title:
+          type: string
+
+    # ─── Associate ──────────────────────────────────────────────────────────
+    Associate:
+      type: object
+      required: [id, name, email, cohortId, createdAt]
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        cohortId:
+          type: number
+        directorId:
+          type: ["number", "null"]
+        managerId:
+          type: ["number", "null"]
+        teamLeadId:
+          type: ["number", "null"]
+        seniorMentorId:
+          type: ["number", "null"]
+        position:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        # Hydrated relationships (optional, returned with detail queries)
+        cohort:
+          $ref: "#/components/schemas/Cohort"
+        director:
+          $ref: "#/components/schemas/Supervisor"
+        manager:
+          $ref: "#/components/schemas/Supervisor"
+        teamLead:
+          $ref: "#/components/schemas/Supervisor"
+        seniorMentor:
+          $ref: "#/components/schemas/Supervisor"
+
+    AssociateInput:
+      type: object
+      required: [name, email, cohortId]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        cohortId:
+          type: number
+        directorId:
+          type: number
+        managerId:
+          type: number
+        teamLeadId:
+          type: number
+        seniorMentorId:
+          type: number
+        position:
+          type: string
+        department:
+          type: string
+
+    AssociateUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        cohortId:
+          type: number
+        directorId:
+          type: ["number", "null"]
+        managerId:
+          type: ["number", "null"]
+        teamLeadId:
+          type: ["number", "null"]
+        seniorMentorId:
+          type: ["number", "null"]
+        position:
+          type: string
+        department:
+          type: string
+
+    AssociateProgress:
+      type: object
+      required: [associateId, phases]
+      properties:
+        associateId:
+          type: number
+        totalCheckins:
+          type: number
+        completedCheckins:
+          type: number
+        overallPercent:
+          type: number
+        phases:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhaseProgress"
+
+    PhaseProgress:
+      type: object
+      required: [phase, checkins]
+      properties:
+        phase:
+          type: string
+          enum: [pre_start, first_day, week_1, week_2, week_3, week_4]
+        completedCount:
+          type: number
+        totalCount:
+          type: number
+        checkins:
+          type: array
+          items:
+            $ref: "#/components/schemas/Checkin"
+
+    # ─── Checkin ────────────────────────────────────────────────────────────
+    Checkin:
+      type: object
+      required: [id, associateId, supervisorId, supervisorRole, phase, status, createdAt]
+      properties:
+        id:
+          type: number
+        associateId:
+          type: number
+        supervisorId:
+          type: number
+        supervisorRole:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        phase:
+          type: string
+          enum: [pre_start, first_day, week_1, week_2, week_3, week_4]
+        status:
+          type: string
+          enum: [pending, completed]
+        notes:
+          type: ["string", "null"]
+        completedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        # Hydrated
+        supervisor:
+          $ref: "#/components/schemas/Supervisor"
+        associate:
+          $ref: "#/components/schemas/Associate"
+
+    CheckinInput:
+      type: object
+      required: [associateId, supervisorId, supervisorRole, phase]
+      properties:
+        associateId:
+          type: number
+        supervisorId:
+          type: number
+        supervisorRole:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        phase:
+          type: string
+          enum: [pre_start, first_day, week_1, week_2, week_3, week_4]
+        notes:
+          type: string
+
+    CheckinUpdate:
+      type: object
+      properties:
+        notes:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed]
+
+    CheckinCompletion:
+      type: object
+      required: [notes]
+      properties:
+        notes:
+          type: string
+
+    # ─── Dashboard ──────────────────────────────────────────────────────────
+    DashboardSummary:
+      type: object
+      required: [totalCohorts, totalAssociates, totalSupervisors, totalCheckins, completedCheckins, pendingCheckins, completionRate]
+      properties:
+        totalCohorts:
+          type: number
+        totalAssociates:
+          type: number
+        totalSupervisors:
+          type: number
+        totalCheckins:
+          type: number
+        completedCheckins:
+          type: number
+        pendingCheckins:
+          type: number
+        completionRate:
+          type: number
+          description: Percentage 0-100
+        recentlyCompleted:
+          type: array
+          items:
+            $ref: "#/components/schemas/Checkin"
+
+    CohortDashboard:
+      type: object
+      required: [cohort, associates, totalCheckins, completedCheckins, completionRate]
+      properties:
+        cohort:
+          $ref: "#/components/schemas/Cohort"
+        totalAssociates:
+          type: number
+        associates:
+          type: array
+          items:
+            $ref: "#/components/schemas/AssociateProgress"
+        totalCheckins:
+          type: number
+        completedCheckins:
+          type: number
+        completionRate:
+          type: number
+
+    PendingCheckin:
+      type: object
+      required: [id, associateId, associateName, supervisorId, supervisorName, supervisorRole, phase, createdAt]
+      properties:
+        id:
+          type: number
+        associateId:
+          type: number
+        associateName:
+          type: string
+        cohortName:
+          type: string
+        supervisorId:
+          type: number
+        supervisorName:
+          type: string
+        supervisorRole:
+          type: string
+          enum: [director, manager, team_lead, senior_mentor]
+        phase:
+          type: string
+          enum: [pre_start, first_day, week_1, week_2, week_3, week_4]
+        createdAt:
+          type: string
+          format: date-time

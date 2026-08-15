@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Associate Onboarding"
+description = "A full-stack employee onboarding platform that manages cohorts, tracks associates through a structured 6-phase new hire process (Pre-Start through Week 4), and requires check-ins from 4 supervisors (Director, Manager, Team Lead, Senior Mentor) at each phase."
+version = "1.0.0"
+id = "artifacts/onboarding"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23165
+
+[services.development]
+run = "pnpm --filter @workspace/onboarding run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/onboarding", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/onboarding/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23165"
+BASE_PATH = "/"
