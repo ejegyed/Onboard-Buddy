@@ -11,6 +11,7 @@ import AssociateDetail from '@/pages/associates/detail';
 import SupervisorsList from '@/pages/supervisors';
 import SupervisorDetail from '@/pages/supervisors/detail';
 import CheckinsList from '@/pages/checkins';
+import HeatmapPage from '@/pages/heatmap';
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ function Router() {
         <Route path="/supervisors" component={SupervisorsList} />
         <Route path="/supervisors/:id" component={SupervisorDetail} />
         <Route path="/checkins" component={CheckinsList} />
+        <Route path="/heatmap" component={HeatmapPage} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

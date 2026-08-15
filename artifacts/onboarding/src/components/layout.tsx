@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Link, useLocation } from "wouter"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, Users, UserSquare2, CheckSquare, Layers, ChevronDown, UserCircle2, LogOut } from "lucide-react"
+import { LayoutDashboard, Users, UserSquare2, CheckSquare, Layers, ChevronDown, UserCircle2, LogOut, LayoutGrid } from "lucide-react"
 import { useListSupervisors } from "@workspace/api-client-react"
 import { useActiveSupervisor } from "@/context/supervisor-context"
 import {
@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge"
 
 const sidebarNavItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
+  { title: "Heatmap", href: "/heatmap", icon: LayoutGrid },
   { title: "Cohorts", href: "/cohorts", icon: Layers },
   { title: "Associates", href: "/associates", icon: Users },
   { title: "Supervisors", href: "/supervisors", icon: UserSquare2 },
