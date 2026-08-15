@@ -7,8 +7,10 @@
  */
 import type { Associate } from './associate';
 import type { CheckinPhase } from './checkinPhase';
+import type { CheckinRiskStatus } from './checkinRiskStatus';
 import type { CheckinStatus } from './checkinStatus';
 import type { CheckinSupervisorRole } from './checkinSupervisorRole';
+import type { CheckinToolGrade } from './checkinToolGrade';
 import type { Supervisor } from './supervisor';
 
 export interface Checkin {
@@ -19,10 +21,13 @@ export interface Checkin {
   phase: CheckinPhase;
   status: CheckinStatus;
   /** @nullable */
+  riskStatus?: CheckinRiskStatus;
+  /** @nullable */
   notes?: string | null;
   /** @nullable */
   completedAt?: Date | null;
   createdAt: Date;
   supervisor?: Supervisor;
   associate?: Associate;
+  toolGrades?: CheckinToolGrade[];
 }

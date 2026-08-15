@@ -497,6 +497,7 @@ export const GetAssociateProgressResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -559,7 +560,19 @@ export const GetAssociateProgressResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 }))
 }))
 })
@@ -581,6 +594,7 @@ export const ListCheckinsResponseItem = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -643,7 +657,19 @@ export const ListCheckinsResponseItem = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })
 export const ListCheckinsResponse = zod.array(ListCheckinsResponseItem)
 
@@ -666,6 +692,7 @@ export const CreateCheckinResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -728,7 +755,19 @@ export const CreateCheckinResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })
 
 
@@ -746,6 +785,7 @@ export const GetCheckinResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -808,7 +848,19 @@ export const GetCheckinResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })
 
 
@@ -831,6 +883,7 @@ export const UpdateCheckinResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -893,7 +946,19 @@ export const UpdateCheckinResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })
 
 
@@ -908,14 +973,20 @@ export const DeleteCheckinResponse = zod.void()
 
 
 /**
- * @summary Mark a check-in as completed
+ * @summary Mark a check-in as completed with grades and risk assessment
  */
 export const CompleteCheckinParams = zod.object({
   "id": zod.coerce.number()
 })
 
 export const CompleteCheckinBody = zod.object({
-  "notes": zod.string()
+  "supervisorId": zod.number().describe('ID of the supervisor completing this check-in (must match the assigned supervisor)'),
+  "notes": zod.string().optional(),
+  "riskStatus": zod.enum(['low', 'medium', 'high']),
+  "toolGrades": zod.array(zod.object({
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations'])
+}))
 })
 
 export const CompleteCheckinResponse = zod.object({
@@ -925,6 +996,7 @@ export const CompleteCheckinResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -987,8 +1059,84 @@ export const CompleteCheckinResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })
+
+
+/**
+ * @summary List all internal tools
+ */
+export const ListToolsResponseItem = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+export const ListToolsResponse = zod.array(ListToolsResponseItem)
+
+
+/**
+ * @summary Create a new internal tool
+ */
+
+
+
+export const CreateToolBody = zod.object({
+  "name": zod.string().min(1),
+  "active": zod.boolean().optional()
+})
+
+export const CreateToolResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Update a tool (rename or toggle active)
+ */
+export const UpdateToolParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const UpdateToolBody = zod.object({
+  "name": zod.string().min(1),
+  "active": zod.boolean().optional()
+})
+
+export const UpdateToolResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Delete a tool
+ */
+export const DeleteToolParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteToolResponse = zod.void()
 
 
 /**
@@ -1009,6 +1157,7 @@ export const GetDashboardSummaryResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -1071,7 +1220,19 @@ export const GetDashboardSummaryResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 })).optional()
 })
 
@@ -1108,6 +1269,7 @@ export const GetCohortDashboardResponse = zod.object({
   "supervisorRole": zod.enum(['director', 'manager', 'team_lead', 'senior_mentor']),
   "phase": zod.enum(['pre_start', 'first_day', 'week_1', 'week_2', 'week_3', 'week_4']),
   "status": zod.enum(['pending', 'completed']),
+  "riskStatus": zod.union([zod.literal('low'),zod.literal('medium'),zod.literal('high'),zod.literal(null)]).nullish(),
   "notes": zod.string().nullish(),
   "completedAt": zod.coerce.date().nullish(),
   "createdAt": zod.coerce.date(),
@@ -1170,7 +1332,19 @@ export const GetCohortDashboardResponse = zod.object({
   "title": zod.string().nullish(),
   "createdAt": zod.coerce.date()
 }).optional()
+}).optional(),
+  "toolGrades": zod.array(zod.object({
+  "id": zod.number(),
+  "checkinId": zod.number(),
+  "toolId": zod.number(),
+  "grade": zod.enum(['below_expectations', 'meets_expectations', 'exceeds_expectations']),
+  "tool": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "active": zod.boolean(),
+  "createdAt": zod.coerce.date()
 }).optional()
+})).optional()
 }))
 }))
 })),

@@ -4,6 +4,7 @@ import cohortsRouter from "./cohorts";
 import supervisorsRouter from "./supervisors";
 import associatesRouter from "./associates";
 import checkinsRouter from "./checkins";
+import toolsRouter from "./tools";
 import dashboardRouter from "./dashboard";
 
 const router: IRouter = Router();
@@ -13,6 +14,7 @@ router.use(cohortsRouter);
 router.use(supervisorsRouter);
 router.use(associatesRouter);
 router.use(checkinsRouter);
+router.use(toolsRouter);
 router.use(dashboardRouter);
 
 export default router;

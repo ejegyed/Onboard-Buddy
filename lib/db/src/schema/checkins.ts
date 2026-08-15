@@ -10,6 +10,9 @@ export type OnboardingPhase = (typeof onboardingPhases)[number];
 export const checkinStatuses = ["pending", "completed"] as const;
 export type CheckinStatus = (typeof checkinStatuses)[number];
 
+export const riskStatuses = ["low", "medium", "high"] as const;
+export type RiskStatus = (typeof riskStatuses)[number];
+
 export const supervisorRolesForCheckin = ["director", "manager", "team_lead", "senior_mentor"] as const;
 
 export const checkinsTable = pgTable("checkins", {
@@ -19,6 +22,7 @@ export const checkinsTable = pgTable("checkins", {
   supervisorRole: text("supervisor_role", { enum: supervisorRolesForCheckin }).notNull(),
   phase: text("phase", { enum: onboardingPhases }).notNull(),
   status: text("status", { enum: checkinStatuses }).notNull().default("pending"),
+  riskStatus: text("risk_status", { enum: riskStatuses }),
   notes: text("notes"),
   completedAt: timestamp("completed_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

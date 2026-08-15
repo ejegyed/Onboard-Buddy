@@ -187,6 +187,42 @@ export const CheckinStatus = {
   completed: 'completed',
 } as const;
 
+/**
+ * @nullable
+ */
+export type CheckinRiskStatus = typeof CheckinRiskStatus[keyof typeof CheckinRiskStatus] | null;
+
+
+export const CheckinRiskStatus = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+export type CheckinToolGradeGrade = typeof CheckinToolGradeGrade[keyof typeof CheckinToolGradeGrade];
+
+
+export const CheckinToolGradeGrade = {
+  below_expectations: 'below_expectations',
+  meets_expectations: 'meets_expectations',
+  exceeds_expectations: 'exceeds_expectations',
+} as const;
+
+export interface Tool {
+  id: number;
+  name: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface CheckinToolGrade {
+  id: number;
+  checkinId: number;
+  toolId: number;
+  grade: CheckinToolGradeGrade;
+  tool?: Tool;
+}
+
 export interface Checkin {
   id: number;
   associateId: number;
@@ -195,12 +231,15 @@ export interface Checkin {
   phase: CheckinPhase;
   status: CheckinStatus;
   /** @nullable */
+  riskStatus?: CheckinRiskStatus;
+  /** @nullable */
   notes?: string | null;
   /** @nullable */
   completedAt?: string | null;
   createdAt: string;
   supervisor?: Supervisor;
   associate?: Associate;
+  toolGrades?: CheckinToolGrade[];
 }
 
 export interface PhaseProgress {
@@ -261,8 +300,41 @@ export interface CheckinUpdate {
   status?: CheckinUpdateStatus;
 }
 
+export type CheckinCompletionRiskStatus = typeof CheckinCompletionRiskStatus[keyof typeof CheckinCompletionRiskStatus];
+
+
+export const CheckinCompletionRiskStatus = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+export type ToolGradeInputGrade = typeof ToolGradeInputGrade[keyof typeof ToolGradeInputGrade];
+
+
+export const ToolGradeInputGrade = {
+  below_expectations: 'below_expectations',
+  meets_expectations: 'meets_expectations',
+  exceeds_expectations: 'exceeds_expectations',
+} as const;
+
+export interface ToolGradeInput {
+  toolId: number;
+  grade: ToolGradeInputGrade;
+}
+
 export interface CheckinCompletion {
-  notes: string;
+  /** ID of the supervisor completing this check-in (must match the assigned supervisor) */
+  supervisorId: number;
+  notes?: string;
+  riskStatus: CheckinCompletionRiskStatus;
+  toolGrades: ToolGradeInput[];
+}
+
+export interface ToolInput {
+  /** @minLength 1 */
+  name: string;
+  active?: boolean;
 }
 
 export interface DashboardSummary {

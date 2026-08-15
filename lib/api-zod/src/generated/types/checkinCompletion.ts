@@ -5,7 +5,13 @@
  * Associate Onboarding Platform API
  * OpenAPI spec version: 0.1.0
  */
+import type { CheckinCompletionRiskStatus } from './checkinCompletionRiskStatus';
+import type { ToolGradeInput } from './toolGradeInput';
 
 export interface CheckinCompletion {
-  notes: string;
+  /** ID of the supervisor completing this check-in (must match the assigned supervisor) */
+  supervisorId: number;
+  notes?: string;
+  riskStatus: CheckinCompletionRiskStatus;
+  toolGrades: ToolGradeInput[];
 }

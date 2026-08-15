@@ -18,6 +18,8 @@ tags:
     description: Associate management
   - name: checkins
     description: Check-in management
+  - name: tools
+    description: Internal tool management
   - name: dashboard
     description: Dashboard and reporting
 
@@ -468,7 +470,7 @@ paths:
     post:
       operationId: completeCheckin
       tags: [checkins]
-      summary: Mark a check-in as completed
+      summary: Mark a check-in as completed with grades and risk assessment
       parameters:
         - name: id
           in: path
@@ -488,6 +490,87 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Checkin"
+        "403":
+          description: Supervisor not authorized to complete this check-in
+        "404":
+          description: Not found
+        "409":
+          description: Phase not yet available based on cohort start date
+
+  # ─── Tools ────────────────────────────────────────────────────────────────
+  /tools:
+    get:
+      operationId: listTools
+      tags: [tools]
+      summary: List all internal tools
+      responses:
+        "200":
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tool"
+    post:
+      operationId: createTool
+      tags: [tools]
+      summary: Create a new internal tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToolInput"
+      responses:
+        "201":
+          description: Tool created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+        "400":
+          description: Invalid input
+
+  /tools/{id}:
+    patch:
+      operationId: updateTool
+      tags: [tools]
+      summary: Update a tool (rename or toggle active)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToolInput"
+      responses:
+        "200":
+          description: Updated tool
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteTool
+      tags: [tools]
+      summary: Delete a tool
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Deleted
         "404":
           description: Not found
 
@@ -782,6 +865,9 @@ components:
         status:
           type: string
           enum: [pending, completed]
+        riskStatus:
+          type: ["string", "null"]
+          enum: [low, medium, high, null]
         notes:
           type: ["string", "null"]
         completedAt:
@@ -795,6 +881,10 @@ components:
           $ref: "#/components/schemas/Supervisor"
         associate:
           $ref: "#/components/schemas/Associate"
+        toolGrades:
+          type: array
+          items:
+            $ref: "#/components/schemas/CheckinToolGrade"
 
     CheckinInput:
       type: object
@@ -824,10 +914,71 @@ components:
 
     CheckinCompletion:
       type: object
-      required: [notes]
+      required: [supervisorId, riskStatus, toolGrades]
       properties:
+        supervisorId:
+          type: number
+          description: ID of the supervisor completing this check-in (must match the assigned supervisor)
         notes:
           type: string
+        riskStatus:
+          type: string
+          enum: [low, medium, high]
+        toolGrades:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolGradeInput"
+
+    # ─── Tools ──────────────────────────────────────────────────────────────
+    Tool:
+      type: object
+      required: [id, name, active, createdAt]
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    ToolInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        active:
+          type: boolean
+
+    ToolGradeInput:
+      type: object
+      required: [toolId, grade]
+      properties:
+        toolId:
+          type: number
+        grade:
+          type: string
+          enum: [below_expectations, meets_expectations, exceeds_expectations]
+
+    CheckinToolGrade:
+      type: object
+      required: [id, checkinId, toolId, grade]
+      properties:
+        id:
+          type: number
+        checkinId:
+          type: number
+        toolId:
+          type: number
+        grade:
+          type: string
+          enum: [below_expectations, meets_expectations, exceeds_expectations]
+        tool:
+          $ref: "#/components/schemas/Tool"
 
     # ─── Dashboard ──────────────────────────────────────────────────────────
     DashboardSummary:

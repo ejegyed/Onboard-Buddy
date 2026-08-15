@@ -39,7 +39,9 @@ import type {
   PendingCheckin,
   Supervisor,
   SupervisorInput,
-  SupervisorUpdate
+  SupervisorUpdate,
+  Tool,
+  ToolInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -1719,7 +1721,7 @@ export const getCompleteCheckinUrl = (id: number,) => {
 }
 
 /**
- * @summary Mark a check-in as completed
+ * @summary Mark a check-in as completed with grades and risk assessment
  */
 export const completeCheckin = async (id: number,
     checkinCompletion: CheckinCompletion, options?: Parameters<typeof customFetch>[1]): Promise<Checkin> => {
@@ -1769,7 +1771,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CompleteCheckinMutationError = ErrorType<void>
 
     /**
- * @summary Mark a check-in as completed
+ * @summary Mark a check-in as completed with grades and risk assessment
  */
 export const useCompleteCheckin = <TError = ErrorType<void>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completeCheckin>>, TError,{id: number;data: BodyType<CheckinCompletion>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -1780,6 +1782,297 @@ export const useCompleteCheckin = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getCompleteCheckinMutationOptions(options));
+    }
+
+export const getListToolsUrl = () => {
+
+
+
+
+  return `/api/tools`
+}
+
+/**
+ * @summary List all internal tools
+ */
+export const listTools = async ( options?: Parameters<typeof customFetch>[1]): Promise<Tool[]> => {
+
+  return customFetch<Tool[]>(getListToolsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListToolsQueryKey = () => {
+    return [
+    `/api/tools`
+    ] as const;
+    }
+
+
+export const getListToolsQueryOptions = <TData = Awaited<ReturnType<typeof listTools>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listTools>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListToolsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listTools>>> = ({ signal }) => listTools({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listTools>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListToolsQueryResult = NonNullable<Awaited<ReturnType<typeof listTools>>>
+export type ListToolsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List all internal tools
+ */
+
+export function useListTools<TData = Awaited<ReturnType<typeof listTools>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listTools>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListToolsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateToolUrl = () => {
+
+
+
+
+  return `/api/tools`
+}
+
+/**
+ * @summary Create a new internal tool
+ */
+export const createTool = async (toolInput: ToolInput, options?: Parameters<typeof customFetch>[1]): Promise<Tool> => {
+
+  return customFetch<Tool>(getCreateToolUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(toolInput)
+  }
+);}
+
+
+
+
+
+export const getCreateToolMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTool>>, TError,{data: BodyType<ToolInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createTool>>, TError,{data: BodyType<ToolInput>}, TContext> => {
+
+const mutationKey = ['createTool'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createTool>>, {data: BodyType<ToolInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createTool(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateToolMutationResult = NonNullable<Awaited<ReturnType<typeof createTool>>>
+    export type CreateToolMutationBody = BodyType<ToolInput>
+    export type CreateToolMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a new internal tool
+ */
+export const useCreateTool = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTool>>, TError,{data: BodyType<ToolInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createTool>>,
+        TError,
+        {data: BodyType<ToolInput>},
+        TContext
+      > => {
+      return useMutation(getCreateToolMutationOptions(options));
+    }
+
+export const getUpdateToolUrl = (id: number,) => {
+
+
+
+
+  return `/api/tools/${id}`
+}
+
+/**
+ * @summary Update a tool (rename or toggle active)
+ */
+export const updateTool = async (id: number,
+    toolInput: ToolInput, options?: Parameters<typeof customFetch>[1]): Promise<Tool> => {
+
+  return customFetch<Tool>(getUpdateToolUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(toolInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateToolMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateTool>>, TError,{id: number;data: BodyType<ToolInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateTool>>, TError,{id: number;data: BodyType<ToolInput>}, TContext> => {
+
+const mutationKey = ['updateTool'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateTool>>, {id: number;data: BodyType<ToolInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateTool(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateToolMutationResult = NonNullable<Awaited<ReturnType<typeof updateTool>>>
+    export type UpdateToolMutationBody = BodyType<ToolInput>
+    export type UpdateToolMutationError = ErrorType<void>
+
+    /**
+ * @summary Update a tool (rename or toggle active)
+ */
+export const useUpdateTool = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateTool>>, TError,{id: number;data: BodyType<ToolInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateTool>>,
+        TError,
+        {id: number;data: BodyType<ToolInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateToolMutationOptions(options));
+    }
+
+export const getDeleteToolUrl = (id: number,) => {
+
+
+
+
+  return `/api/tools/${id}`
+}
+
+/**
+ * @summary Delete a tool
+ */
+export const deleteTool = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getDeleteToolUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteToolMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTool>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteTool>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteTool'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteTool>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteTool(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteToolMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTool>>>
+
+    export type DeleteToolMutationError = ErrorType<void>
+
+    /**
+ * @summary Delete a tool
+ */
+export const useDeleteTool = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteTool>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteTool>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteToolMutationOptions(options));
     }
 
 export const getGetDashboardSummaryUrl = () => {
